@@ -77,21 +77,32 @@ st.sidebar.markdown("---")
 if not daily.empty:
     min_date = daily["sale_date"].min().date()
     max_date = daily["sale_date"].max().date()
-    date_range = st.sidebar.date_input(
-        "Date range",
-        value=(min_date, max_date),
+
+    st.sidebar.markdown("**Filter by date**")
+    start_date = st.sidebar.date_input(
+        "Start date",
+        value=min_date,
         min_value=min_date,
         max_value=max_date,
     )
-    if len(date_range) == 2:
+    end_date = st.sidebar.date_input(
+        "End date",
+        value=max_date,
+        min_value=min_date,
+        max_value=max_date,
+    )
+
+    if start_date <= end_date:
         daily    = daily[
-            (daily["sale_date"].dt.date >= date_range[0]) &
-            (daily["sale_date"].dt.date <= date_range[1])
+            (daily["sale_date"].dt.date >= start_date) &
+            (daily["sale_date"].dt.date <= end_date)
         ]
         products = products[
-            (products["metric_date"].dt.date >= date_range[0]) &
-            (products["metric_date"].dt.date <= date_range[1])
+            (products["metric_date"].dt.date >= start_date) &
+            (products["metric_date"].dt.date <= end_date)
         ]
+    else:
+        st.sidebar.error("Start date must be before end date")
 
 st.sidebar.markdown("---")
 st.sidebar.markdown(
