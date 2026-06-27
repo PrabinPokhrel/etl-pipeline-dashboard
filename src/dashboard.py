@@ -14,21 +14,17 @@ from supabase import create_client
 
 load_dotenv()
 
-# ── Page config ───────────────────────────────────────────────
-st.set_page_config(
-    page_title  = "ETL Pipeline Dashboard",
-    page_icon   = "📊",
-    layout      = "wide",
-    initial_sidebar_state = "expanded",
-)
-
 # ── Supabase client ───────────────────────────────────────────
 @st.cache_resource
 def get_client():
-    return create_client(
-        os.environ["SUPABASE_URL"],
-        os.environ["SUPABASE_KEY"]
-    )
+    # Try Streamlit secrets first (cloud), fall back to env vars (local)
+    try:
+        url = st.secrets["SUPABASE_URL"]
+        key = st.secrets["SUPABASE_KEY"]
+    except Exception:
+        url = os.environ["SUPABASE_URL"]
+        key = os.environ["SUPABASE_KEY"]
+    return create_client(url, key)
 
 sb = get_client()
 
