@@ -19,7 +19,7 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install supabase pandas numpy python-dotenv
+        run: pip install "supabase>=2.31.0" pandas numpy python-dotenv
 
       - name: Run ETL pipeline
         env:
